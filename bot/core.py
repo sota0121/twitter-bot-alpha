@@ -2,7 +2,8 @@ import os
 from typing import Final
 
 import tweepy
-from dotenv import load_dotenv
+import yaml
+from dotenv import load_dotenv, dotenv_values
 from faker import Faker
 
 # --------------------------------------------------
@@ -18,6 +19,7 @@ VAR_CNS_SECRET: Final[str] = "consumer_secret"
 # Main Functions
 # --------------------------------------------------
 load_dotenv(dotenv_path=ENV_FILE_PATH)
+
 ja_faker = Faker("ja_JP")
 en_faker = Faker("en_US")
 
