@@ -55,7 +55,11 @@ def generate_rnd_tweet(nb_words: int) -> str:
     return result
 
 
-def post_rnd_tweet(init_var_func: Callable, environment: str) -> None:
+def post_rnd_tweet(init_var_func: Callable, environment: str) -> str:
+    """
+        ### Returns
+        - tweet: str
+    """
     init_var_func(environment)
 
     api = init_tweepy()
@@ -71,14 +75,18 @@ def post_rnd_tweet(init_var_func: Callable, environment: str) -> None:
     # print(f"result: {ret}")
     print(f"tweeted: {tweet_str}")
 
+    return tweet_str
 
-def post_tweet_local() -> None:
+
+def post_tweet_local() -> str:
     init_var_func = init_envvars
     environment = "development"
-    post_rnd_tweet(init_var_func, environment)
+    tweet = post_rnd_tweet(init_var_func, environment)
+    return tweet
 
 
-def post_tweet_cloud() -> None:
+def post_tweet_cloud() -> str:
     init_var_func = init_envvars
     environment = "production"
-    post_rnd_tweet(init_var_func, environment)
+    tweet = post_rnd_tweet(init_var_func, environment)
+    return tweet

@@ -1,0 +1,6 @@
+.env-template
+.env-template.yml
+.env
+.gitignore
+*.sh
+venv/

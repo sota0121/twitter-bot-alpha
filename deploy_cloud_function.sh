@@ -1,8 +1,8 @@
 gcloud functions deploy bot-alpha-basic \
 --trigger-http \
---source=./bot/core.py \
---entry-point post_rnd_tweet \
+--entry-point tweet_from_cloud \
 --runtime=python39 \
+--project=twitter-bot-positive-demon \
 --allow-unauthenticated \
 --region=asia-northeast1 \
 --env-vars-file .env.yml
