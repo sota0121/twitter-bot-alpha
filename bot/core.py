@@ -1,5 +1,5 @@
 import os
-from typing import Final
+from typing import Callable, Final
 
 import tweepy
 import yaml
@@ -24,6 +24,20 @@ ja_faker = Faker("ja_JP")
 en_faker = Faker("en_US")
 
 
+def init_envvars(environment: str) -> None:
+    """
+        - environment: "development" or "production"
+        - if development, load .env
+        - if production, already loaded .env by cloud function
+    """
+    if environment == "development":
+        load_dotenv(dotenv_path=ENV_FILE_PATH)
+    elif environment == "production":
+        pass
+    else:
+        raise ValueError(f"environment must be 'development' or 'production'")
+
+
 def init_tweepy() -> tweepy.API:
     """
     Initialize tweepy API
@@ -40,11 +54,15 @@ def generate_rnd_tweet(nb_words: int) -> str:
     result = result.replace('。', '')
     return result
 
-def post_rnd_tweet() -> None:
+
+def post_rnd_tweet(init_var_func: Callable, environment: str) -> None:
+    init_var_func(environment)
+
     api = init_tweepy()
 
     # Generate random tweet string
     tweet_str = generate_rnd_tweet(nb_words=10)
+    tweet_str = "（新刊）" + tweet_str
 
     # Post tweet
     ret = api.update_status(status=tweet_str)
@@ -52,3 +70,15 @@ def post_rnd_tweet() -> None:
     # Print result
     # print(f"result: {ret}")
     print(f"tweeted: {tweet_str}")
+
+
+def post_tweet_local() -> None:
+    init_var_func = init_envvars
+    environment = "development"
+    post_rnd_tweet(init_var_func, environment)
+
+
+def post_tweet_cloud() -> None:
+    init_var_func = init_envvars
+    environment = "production"
+    post_rnd_tweet(init_var_func, environment)
