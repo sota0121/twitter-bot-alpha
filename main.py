@@ -7,5 +7,6 @@ def tweet_from_cloud(request):
         - request: request object of flask
             - this is for cloud function
     """
-    tweet = post_tweet_cloud()
+    src_str = request.args.get("src_str", default="なかやまきんにくん", type=str)
+    tweet = post_tweet_cloud(src_str=src_str)
     return f"tweeted: {tweet}"

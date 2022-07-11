@@ -1,4 +1,6 @@
 import os
+import random
+from random import shuffle
 from typing import Callable, Final
 
 import tweepy
@@ -55,6 +57,49 @@ def generate_rnd_tweet(nb_words: int) -> str:
     return result
 
 
+def shuffle_str(src_str: str) -> str:
+    """
+        ### Args
+        - src_str: str
+            - source string should be shuffled
+
+        ### Returns
+        - tweet: str
+    """
+    shuffled_str = "".join(random.sample(src_str, len(src_str)))
+    return shuffled_str
+
+
+def post_shuffle_tweet(init_var_func: Callable, environment: str, src_str: str) -> str:
+    """
+        ### Args
+        - init_var_func: Callable
+            - environment variable initialization function
+        - environment: str
+            - "development" or "production"
+        - src_str: str
+            - source string should be shuffled
+
+        ### Returns
+        - tweet: str
+    """
+    init_var_func(environment)
+
+    api = init_tweepy()
+
+    # Generate shuffled tweet string
+    tweet_str = shuffle_str(src_str)
+
+    # Post tweet
+    ret = api.update_status(status=tweet_str)
+
+    # Print result
+    # print(f"result: {ret}")
+    print(f"tweeted: {tweet_str}")
+
+    return tweet_str
+
+
 def post_rnd_tweet(init_var_func: Callable, environment: str) -> str:
     """
         ### Returns
@@ -78,15 +123,16 @@ def post_rnd_tweet(init_var_func: Callable, environment: str) -> str:
     return tweet_str
 
 
-def post_tweet_local() -> str:
+def post_tweet_local(src_str: str="なかやまきんにくん") -> str:
     init_var_func = init_envvars
     environment = "development"
-    tweet = post_rnd_tweet(init_var_func, environment)
+    tweet = post_shuffle_tweet(init_var_func, environment, src_str=src_str)
+    # tweet = post_rnd_tweet(init_var_func, environment)
     return tweet
 
 
-def post_tweet_cloud() -> str:
+def post_tweet_cloud(src_str: str = "なかやまきんにくん") -> str:
     init_var_func = init_envvars
     environment = "production"
-    tweet = post_rnd_tweet(init_var_func, environment)
+    tweet = post_shuffle_tweet(init_var_func, environment, src_str=src_str)
     return tweet
